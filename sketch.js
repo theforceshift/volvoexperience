@@ -40,7 +40,7 @@ const BUTTON_GROW_FACTOR = 1.5;
 const BUTTON_GLOW_GROW_FACTOR = 2.0;
 
 // --- TEXT & MESSAGE BLOB CONTROL ---
-const MESSAGES = ["Life is beautiful", "Dream bigger", "Stay curious", "Create your sunshine", "The future is bright", "Embrace the journey", "Choose joy", "Be present", "You are enough", "Invent your world"];
+const MESSAGES = ["Life is beautiful", "Chíp Già", "Stay curious", "Create your sunshine", "The future is bright", "Embrace the journey", "Choose joy", "Be present", "You are enough", "Invent your world"];
 const TEXT_FONT_SIZE = 96;
 const TEXT_OPACITY = 90;
 const TEXT_BREATHING_MIN_SIZE = 6;
