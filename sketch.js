@@ -13,14 +13,14 @@ let glowBuffer;
 let blobBuffer; 
 
 // --- FONT SELECTION ---
-const FONT_PATH = 'PlaywriteDKUloopet-Thin.ttf'; 
+const FONT_PATH = 'Montserrat-Thin.ttf'; 
 
 // --- SENSITIVITY CONTROL ---
 const sensitivity = 0.7; 
 
 // --- BLOB CONTROL ---
 const MAX_BLOBS = 7;
-const SPEED_MULTIPLIER = 3; 
+const SPEED_MULTIPLIER = 1.5; 
 const BLOB_LIFESPAN = 12000;
 const SPAWN_COOLDOWN = 800;
 const BLOB_FADE_OUT_DURATION = 4000;
@@ -40,21 +40,19 @@ const BUTTON_GROW_FACTOR = 1.5;
 const BUTTON_GLOW_GROW_FACTOR = 2.0;
 
 // --- TEXT & MESSAGE BLOB CONTROL ---
-const MESSAGES = ["Chào mừng tới trải nghiệm an toàn", "Cuộc sống tươi đẹp alo aloa alo"];
-const TEXT_FONT_SIZE = 100;
+const MESSAGES = ["Life is beautiful", "Dream bigger", "Stay curious", "Create your sunshine", "The future is bright", "Embrace the journey", "Choose joy", "Be present", "You are enough", "Invent your world"];
+const TEXT_FONT_SIZE = 96;
 const TEXT_OPACITY = 90;
-const TEXT_BREATHING_MIN_SIZE = 2;
-const TEXT_BREATHING_MAX_SIZE =12;
-const TEXT_BREATHING_SPEED = 0.0005;
-// --- New Animation Speed Parameters ---
-const TEXT_ANIM_MIN_DURATION = 4000; // Speed for a short press (ms). Smaller = faster.
-const TEXT_ANIM_MAX_DURATION = 4000; // Speed for a long press (ms). Smaller = faster.
-
+const TEXT_BREATHING_MIN_SIZE = 6;
+const TEXT_BREATHING_MAX_SIZE = 10;
+const TEXT_BREATHING_SPEED = 0.002;
+const TEXT_ANIM_MIN_DURATION = 1500;
+const TEXT_ANIM_MAX_DURATION = 4000;
 
 // --- MESH GRADIENT & COLOR CONTROL ---
-const MESH_DENSITY = 4, MESH_WANDER_AMOUNT = 150, MESH_WANDER_SPEED = 0.009, MESH_BLUR = 120;
-const GRADIENT_HUE_1 = 250, GRADIENT_SAT_1 = 85, GRADIENT_BRI_1 = 60;
-const GRADIENT_HUE_2 = 200, GRADIENT_SAT_2 = 75, GRADIENT_BRI_2 = 90;
+const MESH_DENSITY = 4, MESH_WANDER_AMOUNT = 150, MESH_WANDER_SPEED = 0.003, MESH_BLUR = 120;
+const GRADIENT_HUE_1 = 230, GRADIENT_SAT_1 = 90, GRADIENT_BRI_1 = 90;
+const GRADIENT_HUE_2 = 220, GRADIENT_SAT_2 = 80, GRADIENT_BRI_2 = 60 ;
 const PRESENCE_COLOR_HUE = 15, PRESENCE_COLOR_SAT = 90, PRESENCE_COLOR_BRI = 100;
 
 // --- VISUAL EFFECTS ---
@@ -128,8 +126,28 @@ function draw() {
   blobs = blobs.filter(blob => !blob.isDead());
 }
 
+// --- MOUSE AND TOUCH INPUT HANDLERS ---
 function mousePressed() {
+  handlePress();
+}
+
+function mouseReleased() {
+  handleRelease();
+}
+
+function touchStarted() {
+  handlePress();
+  return false; // Prevents default browser actions like zoom
+}
+
+function touchEnded() {
+  handleRelease();
+  return false; // Prevents default browser actions
+}
+
+function handlePress() {
   if (presenceButton.isVisible && !isHoldingButton && !presenceButton.isOnCooldown && presenceButton.currentAlpha > 50) {
+    // p5.js maps the first touch x/y to mouseX/mouseY
     let d = dist(mouseX, mouseY, presenceButton.pos.x, presenceButton.pos.y);
     if (d < presenceButton.currentSize / 2) {
       isHoldingButton = true;
@@ -140,7 +158,7 @@ function mousePressed() {
   }
 }
 
-function mouseReleased() {
+function handleRelease() {
   if (isHoldingButton) {
     isHoldingButton = false;
     let holdDuration = min(millis() - holdStartTime, MAX_HOLD_TIME);
@@ -149,6 +167,7 @@ function mouseReleased() {
     presenceButton.cooldownStartTime = millis();
   }
 }
+
 
 // ---- "FLY-IN WARPED CIRCLE" BLOB LOGIC ----
 function spawnBlob() {
@@ -220,7 +239,6 @@ function startTextAnimation(holdDuration) {
   const bounds = font.textBounds(currentMessage, 0, 0, TEXT_FONT_SIZE);
   const x = width / 2 - bounds.w / 2, y = height / 3 + bounds.h / 2;
   textPoints = font.textToPoints(currentMessage, x, y, TEXT_FONT_SIZE, { sampleFactor: 0.1, simplifyThreshold: 0 });
-  
   textAnimation.duration = map(holdDuration, 0, MAX_HOLD_TIME, TEXT_ANIM_MIN_DURATION, TEXT_ANIM_MAX_DURATION);
   textAnimation.startTime = millis();
   textAnimation.isAnimating = true;
